@@ -1,0 +1,200 @@
+<!--
+    Auhtor: Adamidis Konstantinos
+
+    Περιγραφή:
+
+        Σελίδα που φιλοξενεί έναν υπολογιστή τοu εμβαδού του κύκλου.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Area of Circle</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src ="areaOfCircle.js"></script>
+</head>
+<body onload="onLoad()">
+    <div class="container">
+
+        <div class="row">
+            <h1>Εμβαδόν Κύκλου</h1>
+            <p class="rule">
+                Κυκλικός δίσκος λέγεται ο κύκλος μαζί με την επιφάνεια που κλείνει μέσα του. 
+                Για να βρούμε το εμβαδόν επιφάνειας του κυκλικού δίσκου χρησιμοποιούμε τον μαθηματικό τύπο:
+                
+                A = π * r&sup2;
+            </p>
+        </div>
+        <div class="row">
+            <img src="CircleArea.png" alt="Εμβαδόν κύκλου" style ="width: 15%;">
+
+        </div>
+
+        <div class="row">
+            <h2>Υπολογισμός εμβαδού κύκλου</h2>
+            <p class="rule">
+                Μπορόυμε να υπολογίσουμε το εμβαδόν του κύκλου Α εάν γνωρίζουμε την ακτίνα του r, ή και το ανάποδο, εφόσον ξέρουμε την μαθηματική σταθερά π.
+            </p>
+        </div>
+
+        <div class="row">
+            <div class="column">
+                <p>Τιμή του Εμβαδού Α</p>
+            </div>
+
+            <div class="column">
+                <p>Τιμή της Ακτίνας r</p>
+            </div>
+
+            <div class="column">
+                <p>Τιμή της μαθηματικής σταθεράς π(pi)</p>
+            </div>
+        </div>
+        
+        <div class = "row">
+            <div class="column"><input id="area" type="number" min="0"></div>
+            <div class="column"><input id="radius" type="number" min="0"></div>
+            <div class="column"> <input id ="pi" value="3,14159265" disabled></div>
+        </div>
+        
+        <div class="row">
+            <div class="column"><label for="calcSelection">Υπολογισμός: </label></div>
+            <div class="column"></div>
+            <div class="column"></div>
+        </div> 
+
+        <div class = "row">
+            <div class="column"> 
+                <select name="Calculate" id="calcSelection" onchange="onResultChange()">
+                <option value="A">Εμβαδόν</option>
+                <option value="r">Ακτίνα</option>
+                
+                </select></div>
+            <div class="column"> <p id="result" class="result"></p></div>
+            <div class="column"><button id="calcButton" onclick="oncalcButtonClick()">Υπολογισμός</button></div>    
+        </div>  
+        
+    </div>
+
+    <script>
+        // δήλωσε μεταβλητές αναφοράς για κάθε πεδίο εισόδου
+        let inputArea = document.getElementById("area");
+        let inputRadius = document.getElementById("radius");
+        const PI = document.getElementById("pi");
+         // δήλωσε μία μεταβλητή αναφοράς για το στοιχείο αναδυόμενης λίστας επιλογής υπολογισμού
+        let calc = document.getElementById("calcSelection");
+        // δήλωσε μία μεταβλητή αναφοράς για το στοιχείο εμφάνισης αποτελέσματος 
+        let result = document.getElementById("result");
+
+        // συνάρτηση που θα εκτελείται όταν φορτώνουμε τη σελίδα
+        function onLoad() {
+             // κατά τη φόρτωση της σελίδας
+            calc.value = "A";           // επέλεξε ως αρχική επιλογή υπολογισμού το εμβαδόν
+            inputArea.disabled = true;   // απενεργοποίησε το στοιχείο εισόδου του εμβαδού
+            inputArea.value = "";        // καθάρισε όλα τα πεδία εισόδου
+            inputRadius.value = "";
+            // κάνε μεταβολή των χρωμάτων 
+            inputArea.style.backgroundColor = "transparent";
+            inputRadius.style.backgroundColor = "greenyellow";
+            PI.style.backgroundColor = "#2ed9f7";
+        }
+
+        // συνάρτηση που θα εκτελείται με την αλλαγή της τιμής του στοιχείου select
+        function onResultChange() {            
+            calculationSelector(calc.value);           
+        }
+
+        // συνάρτηση που θα εκτελείται όταν πατηθεί το πλήκτρο υπολογισμού
+        function oncalcButtonClick() {
+            // ανάλογα με την επιλογή υπολογισμού
+            switch(calc.value)
+            {
+                case "A": // Υπολογισμός του εμδαδού από την ακτίνα και το π με ακρίβεια 2 δεκαδικών ψηφείων
+                if (checkDenominator(inputRadius.value))
+                {
+                    // Εμφάνισε το αποτέλεσμα στο πεδίο resutl
+                    result.innerHTML = CirlceArea_R(inputRadius.value).toFixed(2);
+                    // Εμφάνισε το ίδιο αποτέλεσμα στο πεδίο εισόδου του εμδαδού
+                    inputArea.value = CirlceArea_R(inputRadius.value).toFixed(2);
+
+                }
+                else // Σε περίπτωση που η τιμή της ακτίνας ειναι 0 
+                {   
+                    result.innerHTML = "H τιμή της ακτίνας δεν έχει σωστή μορφή";
+                }
+                    break;
+                case "r": // Υπολογισμός της ακτίνας απο το εμβαδόν και το π με ακρίβεια 2 δεκαδικών ψηφείων
+                if (checkDenominator(inputArea.value))
+                {
+                    // Εμφάνισε το αποτέλεσμα στο πεδίο resutl
+                    result.innerHTML = CirlceArea_A(inputArea.value).toFixed(2);
+                    // Εμφάνισε το ίδιο αποτέλεσμα στο πεδίο εισόδου της ακτίνας
+                    inputRadius.value = CirlceArea_A(inputArea.value).toFixed(2);
+                }
+                else // Σε περίπτωση που η τιμή του εμβαδου ειναι 0 
+                {
+                    result.innerHTML = "H τιμή του εμβαδου δεν έχει σωστή μορφή";
+                } 
+                    break;              
+            }
+           
+        }
+       
+        
+        // μία συνάρτηση η οποία επιστρέφει true άν η παράμετρος value είναι αριθμός διαφορετικός του 0
+        // θα χρησιμοποιηθεί ώστε να ελέγχει άν ο παρανομαστής ενός κλάσματος δέν είναι 0 ώστε να μήν 
+        // δημιουργούνται προβλήματα κατά τις πράξεις με διαιρέσεις.
+        function checkDenominator(param) {
+            // μεταβλητή η οποία θα γίνει true μόνο άν ο παρανομαστής είναι αριθμός και είναι διαφορετικός του 0
+            let pass = false;
+
+            // κάνε μετατροπή της τιμής value σε αριθμό τύπου float
+            let f = parseFloat(param);
+            // πρώτα κάνε έλεγχο άν η τιμή δεν είναι άκυρη
+            if (!Number.isNaN(f))
+            {
+                // άν περάσεις το πρώτο check κάνε έλεγχο άν δεν είναι 0
+                if (param != 0)
+                 // θέσε πως περάσαμε τα check άρα είναι ασφαλές να χρησιμοποιήσουμε τον αριθμό
+                 pass = true;                
+            }
+            return pass;
+        }
+
+        // Συνάρτηση με τη μορφή διαδικασίας η οποία δέχεται μία παράμετρο value
+        // και σύμφωνα με την τιμή αυτής της παραμέτρου απενεργοποιεί το κουτί εισόδου
+        // που αντιστοιχεί στον υπολογισμό αυτής της ποσότητας. Οι επιτρεπτές τιμές είναι
+        // "A" - για υπολογισμό του εμβαδου
+        // "r" - για υπολογισμό της ακτίνας
+        // Η συνάρτηση αυτή έχει σχεδιαστεί να λειτουργεί με την συνάρτηση εξυπηρέτησης του event onChange
+        // για το στοιχείο <select> που έχουμε τοποθετήσει στη σελίδα μας ωστε να επιλέγουμε την παράμετρο υπολογισμού
+        function calculationSelector(param)
+        {
+            switch (param)
+            {
+                case "A":
+                    inputArea.disabled = true;
+                    inputRadius.disabled = false;
+                    inputArea.style.backgroundColor = "transparent";
+                    inputRadius.style.backgroundColor = "greenyellow";
+                    break;
+                case "r":
+                    inputArea.disabled = false;
+                    inputRadius.disabled = true;
+                    inputArea.style.backgroundColor = "greenyellow";
+                    inputRadius.style.backgroundColor = "transparent"; 
+                    break;
+                default:
+                    inputArea.disabled = true;
+                    inputRadius.disabled = false;
+                    inputArea.style.backgroundColor = "transparent";
+                    inputRadius.style.backgroundColor = "greenyellow";
+                    break;   
+            }
+        }
+    </script>
+    
+</body>
+</html>
